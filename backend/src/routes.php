@@ -2,6 +2,7 @@
 
 use App\Controller\HomeController;
 use App\Controller\RoomController;
+use App\Controller\UserController;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
@@ -17,6 +18,10 @@ return function (App $app) {
     $app->post('/rooms', [RoomController::class, 'create']);
     $app->put('/rooms/{id}', [RoomController::class, 'update']);
     $app->delete('/rooms/{id}', [RoomController::class, 'delete']);
+
+    //Users
+    $app->get('/users',[UserController::class,'getAllUsers']);
+    $app->get('/users/{id}',[UserController::class,'getUserById']);
 
     // CORS
     // - always respond successfully to options
