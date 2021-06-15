@@ -33,15 +33,29 @@ class UserController {
         }
     }
 
+
+
     public function createUser(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $user = json_decode($request->getBody(), true);
 
         if ($user !== null and isset($user["login"]) and $user["email"] and $user["password"]) {
-            $user = $this->repository->create($user);
-            $json = json_encode($user);
-            $response->getBody()->write($json);
-            return $response->withStatus(201, 'User was created');
+
+            $emailOk = $this->repository->verifyEmail($user["email"]);
+            $loginOk = $this->repository->verifyLogin($user["login"]);
+
+            if($emailOk["ver_email"] >= 1 or $loginOk["ver_login"] >= 1){
+                //echo $emailOk["ver_email"];
+                //echo $loginOk["ver_login"];
+                return $response->withStatus(400, 'Email or login is not unique');
+            }
+            else{
+                $user = $this->repository->createUser($user);
+                $json = json_encode($user);
+                $response->getBody()->write($json);
+                return $response->withStatus(201, 'User was created');
+            }
+
         } else {
             return $response->withStatus(400, 'Bad input data');
         }

@@ -22,6 +22,7 @@ return function (App $app) {
     //Users
     $app->get('/users',[UserController::class,'getAllUsers']);
     $app->get('/users/{id}',[UserController::class,'getUserById']);
+    $app->post('/users',[UserController::class, 'createUser']);
 
     // CORS
     // - always respond successfully to options
