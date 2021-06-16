@@ -6,23 +6,41 @@ use App\Controller\UserController;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
+use Slim\Routing\RouteCollectorProxy;
 
 return function (App $app) {
 
     // Homepage
     $app->get('/', [HomeController::class, 'index']);
 
-    // Rooms
-    $app->get('/rooms', [RoomController::class, 'getAll']);
-    $app->get('/rooms/{id}', [RoomController::class, 'getById']);
-    $app->post('/rooms', [RoomController::class, 'create']);
-    $app->put('/rooms/{id}', [RoomController::class, 'update']);
-    $app->delete('/rooms/{id}', [RoomController::class, 'delete']);
+
+    //Login and registration
+    $app->post('/registration',[UserController::class, 'register']);
+    $app->post('/login', [UserController::class,'login']);
+
+
+
+    // -------- SECURED ROUTES -------------
+    $app->group('/auth',function (RouteCollectorProxy $group){
+        // Rooms
+        $group->get('/rooms', [RoomController::class, 'getAll']);
+        $group->get('/rooms/{id}', [RoomController::class, 'getById']);
+        $group->post('/rooms', [RoomController::class, 'create']);
+        $group->put('/rooms/{id}', [RoomController::class, 'update']);
+        $group->delete('/rooms/{id}', [RoomController::class, 'delete']);
+
+
+        //Users
+        $group->get('/users',[UserController::class,'getAllUsers']);
+        $group->get('/users/{id}',[UserController::class,'getUserById']);
+
+
+    });
+
+    //end of secures routes-----
 
     //Users
-    $app->get('/users',[UserController::class,'getAllUsers']);
-    $app->get('/users/{id}',[UserController::class,'getUserById']);
-    $app->post('/registration',[UserController::class, 'register']);
+
 
     // CORS
     // - always respond successfully to options

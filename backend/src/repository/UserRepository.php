@@ -68,7 +68,7 @@ class UserRepository {
         try {
             $stmt->execute();
             $id = $this->db->lastInsertId();
-            return $this->getById($id);
+            return $this->getUserById($id);
         } catch (\PDOException $e) {
             echo $e->getMessage();
             return false;
