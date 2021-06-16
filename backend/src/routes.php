@@ -22,7 +22,7 @@ return function (App $app) {
     //Users
     $app->get('/users',[UserController::class,'getAllUsers']);
     $app->get('/users/{id}',[UserController::class,'getUserById']);
-    $app->post('/users',[UserController::class, 'createUser']);
+    $app->post('/registration',[UserController::class, 'register']);
 
     // CORS
     // - always respond successfully to options

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use DI\Container;
+use Firebase\JWT\JWT;
 use PDO;
 
 class UserRepository {
@@ -31,14 +32,14 @@ class UserRepository {
     }
 
 
-    public function verifyEmail(string $email): array | bool {
+    public function verifyUserEmail(string $email): array | bool {
         $stmtVerifyEmail = $this->db->prepare("select count(*) as ver_email from users where email=:email");
         $stmtVerifyEmail->bindValue(':email', $email);
         $stmtVerifyEmail->execute();
         return $stmtVerifyEmail->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function verifyLogin(string $login): array | bool{
+    public function verifyUserLogin(string $login): array | bool{
         $stmtVerifyEmail = $this->db->prepare("select count(*) as ver_login from users where login=:login");
         $stmtVerifyEmail->bindValue(':login', $login);
         $stmtVerifyEmail->execute();
@@ -46,41 +47,33 @@ class UserRepository {
     }
 
 
-    /*
-    public function createUser(array $data): array | bool {
-        $lastid = $this->db->lastInsertId();
-        echo $lastid;
+    public function createUser(array $data): array | bool
+    {
+        $stmt = $this->db->prepare("
+            INSERT INTO users
+                (login, email, password, name, surname, gender, registered, role)
+            VALUES 
+                (:login, :email, :password, :name, :surname, :gender, :registered, :role)
+        ");
 
-        $stmt = $this->db->prepare
-        ("insert into users (id_users, login, email, password, name, surname, gender, registrated, role) 
-        values (:id_users,:login,:email,:password, :name, :surname, :gender, :registrated, :role)");
-
-
-        $stmt->bindValue(':id_users', $lastid);
         $stmt->bindValue(':login', $data['login']);
         $stmt->bindValue(':email', $data['email']);
-        $stmt->bindValue(':password', md5($data['password']));
-        // to s tim nul je z APV ? nevim jestli to bude fungovat :D
-        $stmt->bindValue(':name', empty($data['name'])?null:$data['name']);
-        $stmt->bindValue(':surname', empty($data['surname'])?null:$data['surname']);
-        $stmt->bindValue(':gender', empty($data['gender'])?null:$data['gender']);
-        $stmt->bindValue(':registrated', time());
-        $stmt->bindValue(':role', empty($data['role'])?null:$data['role']);
-        $stmt->execute();
+        $stmt->bindValue(':password', password_hash($data['password'], PASSWORD_DEFAULT));
+        $stmt->bindValue(':name', $data['name']);
+        $stmt->bindValue(':surname', $data['surname']);
+        $stmt->bindValue(':gender', $data['gender']);
+        $stmt->bindValue(':registered', time());
+        $stmt->bindValue(':role', $data['role']);
 
-        $id = $this->db->lastInsertId();
-
-        return $this->getUserById($id);
-    }*/
-
-    /*public function update(int $id, array $data): array
-    {
-        $stmt = $this->db->prepare("UPDATE rooms SET title=:title WHERE id_rooms=:id_rooms");
-        $stmt->bindValue(':title', $data['title']);
-        $stmt->bindValue(':id_rooms', $id);
-        $stmt->execute();
-        return $this->getById($id);
-    }*/
+        try {
+            $stmt->execute();
+            $id = $this->db->lastInsertId();
+            return $this->getById($id);
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+            return false;
+        }
+    }
 
     public function deleteUser(int $id)
     {
@@ -88,4 +81,32 @@ class UserRepository {
         $stmt->bindValue(':id_users', $id);
         $stmt->execute();
     }
+
+    public function verifyLogin(string $login, string $password): array | bool
+    {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE login=:login");
+        $stmt->bindValue(':login', $login);
+        $stmt->execute();
+        $user = $stmt->fetch();
+
+        if ($user !== false) {
+            $hash = $user["password"];
+            if (password_verify($password, $hash)) {
+                return $user;
+            }
+        }
+
+        return false;
+    }
+
+    public function createToken(int $userId): string
+    {
+        $tokenKey = $_ENV['TOKEN_KEY'];
+        $tokenPayload = [
+            "userId" => $userId,
+        ];
+        return JWT::encode($tokenPayload, $tokenKey, "HS256");
+    }
+
+
 }
