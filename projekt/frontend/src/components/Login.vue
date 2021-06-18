@@ -3,10 +3,20 @@
     <h3>Login</h3>
    
     <form @submit.prevent="doLogin">
-       <input type="text" v-model="login">
-       <input type="password" v-model="password">
+        <div>
+            <label class="form-label">Login</label>
+            <input type="text" v-model="login" class="form-control">
+            
+         </div>   
+
+         <div>
+             <label class="form-label">Password</label>
+             <input type="password" v-model="password" class="form-control">
+
+             </div>
+
        
-       <button type="submit">Login</button>
+       <button type="submit" class="btn-primary">Login</button>
     </form>
 </div>
 
@@ -26,7 +36,7 @@
         methods:{
             doLogin(){
                 console.log(this.login, this.password);
-                
+
             },
         }
     };
