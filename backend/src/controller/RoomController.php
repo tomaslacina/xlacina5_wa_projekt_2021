@@ -36,9 +36,11 @@ class RoomController {
     public function create(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $room = json_decode($request->getBody(), true);
+        $tokenPayload = $request->getAttribute('token');
+        $userid=(int) $tokenPayload['userId'];
 
         if ($room !== null and isset($room["title"])) {
-            $room = $this->repository->create($room);
+            $room = $this->repository->create($room,$userid);
             $json = json_encode($room);
             $response->getBody()->write($json);
             return $response->withStatus(201, 'Created');

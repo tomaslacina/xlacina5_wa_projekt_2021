@@ -101,7 +101,7 @@ class UserRepository {
 
     public function createToken(int $userId): string
     {
-        $tokenKey = $_ENV['TOKEN_KEY'];
+        $tokenKey = $_ENV["TOKEN_KEY"];
         $tokenPayload = [
             "userId" => $userId,
         ];
