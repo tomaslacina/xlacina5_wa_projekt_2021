@@ -13,7 +13,11 @@
              <label class="form-label">Password</label>
              <input type="password" v-model="password" class="form-control">
 
-             </div>
+        </div>
+
+        <div v-if="error" class="alert alert-danger" >
+            {{error}}
+        </div>
 
        
        <button type="submit" class="btn-primary">Login</button>
@@ -26,16 +30,40 @@
 
 
 <script>
+    
     export default{
         data:()=>{
             return{
                 login:"",
                 password:"",
+                error:null,
             };
         },
         methods:{
-            doLogin(){
-                console.log(this.login, this.password);
+            async doLogin(){     
+                this.error=null;
+                
+                //1. zpusob:
+                
+                //this.$http.post("/login",{login: this.login, password: this.password})
+                //.then((data)=>console.log(data))
+                //.catch(()=>console.log("promise failed"))
+                //.finally(()=>console.log("finally"))
+
+                //2. zpusob:
+
+                try{
+                   const response = await this.$http.post("/login",{login: this.login, password: this.password});
+                   const{token}=response.data;
+                   console.log(token);
+                   this.$router.push({name:"rooms"})
+
+
+                }catch(e){
+                    console.error(e)
+                    this.error="Wrong credentials";
+
+                }
 
             },
         }

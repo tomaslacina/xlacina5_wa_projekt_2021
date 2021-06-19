@@ -1,14 +1,21 @@
 <template>
-    <div class="navbar">
-        <h1>CHAT APP</h1>
-        <div v-if="user !=null">
-            <h2> Ahoj {{user.login}} </h2>
-            <button @click="logout"> LOGOUT</button>
-        </div>
+    <div class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <router-link :to="{name:'home'}" class="navbar-brand">Chat app</router-link>
+            
+            <div v-if="user !=null">
+                <h2> Ahoj {{user.login}} </h2>
+                <button @click="logout"> LOGOUT</button>
+            </div>
 
-        <div v-else>
-            <button>LOGIN</button>
-            <button>REGISTER</button>
+        <ul v-else class="navbar-nav">
+            <li class="nav-item">
+                <router-link :to="{name: 'login'}" class="nav-link" active-class="active">Login</router-link>
+            </li>
+            <li class="nav-item">
+                <router-link :to="{name: 'register'}" class="nav-link" active-class="active">Register</router-link>
+            </li>
+        </ul>
         </div>
     </div>
 </template>

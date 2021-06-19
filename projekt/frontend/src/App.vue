@@ -1,17 +1,19 @@
 <template>
-  <div id="app">
-    
+  <div id="app"> 
     <navbar :user="user" @logout="onLogout"></navbar>
-    <login></login>
-   
+  
 
+  <div class="mt-4">
+    <router-view></router-view>
+  </div>
   </div>
 </template>
 
 <script>
 
 import Navbar from "./components/Navbar";
-import Login from "./components/Login";
+
+
 
 
 
@@ -19,7 +21,6 @@ export default {
   name: 'App',
   components: {
     navbar: Navbar,   //prvni je nazev co pouziju v template, druhe je nazev komponenty xxx.vue   navbar: Navbar  / lze to i takto jen Navbar                 
-    login: Login,
   },
   data:()=>{
     return {
