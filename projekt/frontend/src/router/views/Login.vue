@@ -55,8 +55,8 @@
                 try{
                    const response = await this.$http.post("/login",{login: this.login, password: this.password});
                    const{token}=response.data;
-                   console.log(token);
-                   this.$router.push({name:"rooms"})
+                  this.$tokenManager.setToken(token);
+                   this.$router.push({name:"rooms"});
 
 
                 }catch(e){
