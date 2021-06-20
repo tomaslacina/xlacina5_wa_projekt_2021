@@ -1,43 +1,41 @@
 <template>
-    <div>
-        <h3>Rooms</h3>
-        <router-link v-for="room in rooms" :key="room.id_rooms" tag="div" :to="{name:'room', params:{id:room.id_rooms}}">
-            <h3>{{room.title}}</h3>
-        </router-link>
+  <div class="container">
+    <h3>Room list:</h3>
+    <div class="row">
+      <div class="col" v-for="room in rooms" :key="room.id_rooms">
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">{{ room.title }}</h5>
+            <!-- <p class="card-text">{{ new Date(room.created).toLocaleDateString() }}</p> -->
+            <router-link :to="{ name: 'room', params: { id: room.id_rooms } }" class="btn btn-primary">
+              Enter
+            </router-link>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
-    export default{
-
-        data(){
-        return{
-            rooms:[]
-        }
+export default {
+  data() {
+    return {
+      rooms: [],
+    };
+  },
+  methods: {
+    async loadAllRooms() {
+      try {
+        const response = await this.$http.get("/auth/rooms");
+        this.rooms = response.data;
+      } catch (e) {
+        console.error("nastala chyba", e);
+      }
     },
-
-    methods:{
-       async loadAllRooms(){
-
-            try{
-                const response = await this.$http.get("/auth/rooms");
-                console.log(response);
-                this.rooms = response.data;
-
-            }catch(e){
-                console.error("Nastala chyba",e);
-
-            }
-            
-        },
-
-    },
-
-    mounted(){
-        this.loadAllRooms();
-    },
-    
-    }
-
-
+  },
+  mounted() {
+    this.loadAllRooms();
+  },
+};
 </script>

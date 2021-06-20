@@ -13,15 +13,13 @@ return function (App $app) {
     // Homepage
     $app->get('/', [HomeController::class, 'index']);
 
+    // Login and registration
+    $app->post('/login', [UserController::class, 'login']);
+    $app->post('/registration', [UserController::class, 'register']);
 
-    //Login and registration
-    $app->post('/registration',[UserController::class, 'register']);
-    $app->post('/login', [UserController::class,'login']);
+    // --- Secured routes ---
+    $app->group('/auth', function(RouteCollectorProxy $group) {
 
-
-
-    // -------- SECURED ROUTES -------------
-    $app->group('/auth',function (RouteCollectorProxy $group){
         // Rooms
         $group->get('/rooms', [RoomController::class, 'getAll']);
         $group->get('/rooms/{id}', [RoomController::class, 'getById']);
@@ -29,18 +27,8 @@ return function (App $app) {
         $group->put('/rooms/{id}', [RoomController::class, 'update']);
         $group->delete('/rooms/{id}', [RoomController::class, 'delete']);
 
-
-        //Users
-        $group->get('/users',[UserController::class,'getAllUsers']);
-        $group->get('/users/{id}',[UserController::class,'getUserById']);
-
-
     });
-
-    //end of secures routes-----
-
-    //Users
-
+    // --- end of Secured routes ---
 
     // CORS
     // - always respond successfully to options
@@ -56,7 +44,7 @@ return function (App $app) {
 
     // Not Found - handle all other routes as 404 Not Found error
     $app->map(['GET', 'POST', 'PUT', 'DELETE'], '/{routes:.+}', fn (ResponseInterface $response) =>
-        $response->withStatus(404, 'Not Found')
+    $response->withStatus(404, 'Not Found')
     );
 
 };

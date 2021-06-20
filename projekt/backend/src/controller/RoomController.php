@@ -10,8 +10,8 @@ class RoomController {
 
     private RoomRepository $repository;
 
-    public function __construct(RoomRepository $service) {
-        $this->repository = $service;
+    public function __construct(RoomRepository $repository) {
+        $this->repository = $repository;
     }
 
     public function getAll(ResponseInterface $response): ResponseInterface {
@@ -37,10 +37,10 @@ class RoomController {
     {
         $room = json_decode($request->getBody(), true);
         $tokenPayload = $request->getAttribute('token');
-        $userid=(int) $tokenPayload['userId'];
+        $userId = (int) $tokenPayload['userId'];
 
-        if ($room !== null and isset($room["title"])) {
-            $room = $this->repository->create($room,$userid);
+        if ($room !== null and !empty($room["title"]) and $userId) {
+            $room = $this->repository->create($room, $userId);
             $json = json_encode($room);
             $response->getBody()->write($json);
             return $response->withStatus(201, 'Created');
@@ -71,5 +71,4 @@ class RoomController {
         $this->repository->delete($id);
         return $response->withStatus(204);
     }
-
 }

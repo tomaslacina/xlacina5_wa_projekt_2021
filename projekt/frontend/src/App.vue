@@ -1,41 +1,40 @@
 <template>
-  <div id="app"> 
-    <navbar :user="user" @logout="onLogout"></navbar>
-  
+  <div id="app">
+    <navbar :user="user" @logout="onLogout" :logoutFn="onLogout"> </navbar>
 
-  <div class="mt-4">
-    <router-view></router-view>
-  </div>
+    <div class="mt-4">
+      <router-view @userLogged="onUserLog"></router-view>
+    </div>
   </div>
 </template>
 
 <script>
-
 import Navbar from "./components/Navbar";
 
-
-
-
-
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    navbar: Navbar,   //prvni je nazev co pouziju v template, druhe je nazev komponenty xxx.vue   navbar: Navbar  / lze to i takto jen Navbar                 
+    Navbar,
   },
-  data:()=>{
+  data: () => {
     return {
-      user:{
-        login:"xlacina5",
-        id:"2",
-      },
+      user: null,
     };
   },
-  methods:{
-    onLogout(){
-      this.user=null;
-    }
+  methods: {
+    onUserLog(userData) {
+      this.user = userData;
+    },
+    onLogout() {
+      this.user = null;
+      this.$tokenManager.logout();
+      this.$router.push({ name: "home" });
+    },
+  },
+  mounted(){
+    this.user = this.$tokenManager.getPayload()
   }
-}
+};
 </script>
 
 <style>
@@ -44,6 +43,5 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>

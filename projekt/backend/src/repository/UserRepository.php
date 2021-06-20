@@ -8,28 +8,6 @@ use PDO;
 
 class UserRepository {
 
-    private PDO $db;
-
-    public function __construct(Container $container)
-    {
-        $this->db = $container->get('db');
-    }
-
-    public function getAllUsers(): array
-    {
-        $stmt = $this->db->prepare("select * from users");
-        $stmt->execute();
-        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $users;
-    }
-
-    public function getUserById(int $id): array | bool
-    {
-        $stmt = $this->db->prepare("select * from users where id_users=:id");
-        $stmt->bindValue(':id', $id);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
 
 
     public function verifyUserEmail(string $email): array | bool {
@@ -47,7 +25,22 @@ class UserRepository {
     }
 
 
-    public function createUser(array $data): array | bool
+    private PDO $db;
+
+    public function __construct(Container $container)
+    {
+        $this->db = $container->get('db');
+    }
+
+    public function getById(int $id): array | bool
+    {
+        $stmt = $this->db->prepare("SELECT * FROM users WHERE id_users=:id");
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function create(array $data): array | bool
     {
         $stmt = $this->db->prepare("
             INSERT INTO users
@@ -68,18 +61,11 @@ class UserRepository {
         try {
             $stmt->execute();
             $id = $this->db->lastInsertId();
-            return $this->getUserById($id);
+            return $this->getById($id);
         } catch (\PDOException $e) {
             echo $e->getMessage();
             return false;
         }
-    }
-
-    public function deleteUser(int $id)
-    {
-        $stmt = $this->db->prepare("DELETE FROM users WHERE id_users=:id_users");
-        $stmt->bindValue(':id_users', $id);
-        $stmt->execute();
     }
 
     public function verifyLogin(string $login, string $password): array | bool
@@ -101,12 +87,19 @@ class UserRepository {
 
     public function createToken(int $userId): string
     {
-        $tokenKey = $_ENV["TOKEN_KEY"];
+        $tokenKey = $_ENV['TOKEN_KEY'];
         $tokenPayload = [
             "userId" => $userId,
         ];
         return JWT::encode($tokenPayload, $tokenKey, "HS256");
     }
+
+
+
+
+
+
+
 
 
 }
