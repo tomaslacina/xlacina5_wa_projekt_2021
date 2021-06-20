@@ -40,7 +40,7 @@ class UserRepository {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function create(array $data): array | bool
+    public function createUser(array $data): array | bool
     {
         $stmt = $this->db->prepare("
             INSERT INTO users
