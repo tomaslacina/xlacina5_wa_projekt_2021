@@ -40,7 +40,7 @@ export default {
 .navbar{
     background:green;
     padding: 20px 40px;
-    color: white;
+    color: black;
     font-weight:700;
 }
 

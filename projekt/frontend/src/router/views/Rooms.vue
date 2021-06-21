@@ -6,7 +6,7 @@
         <div class="card" style="width: 18rem;">
           <div class="card-body">
             <h5 class="card-title">{{ room.title }}</h5>
-            <!-- <p class="card-text">{{ new Date(room.created).toLocaleDateString() }}</p> -->
+            <h6 class="card-title">Zamčeno:{{room.lock}}</h6>
             <router-link :to="{ name: 'room', params: { id: room.id_rooms } }" class="btn btn-primary">
               Enter
             </router-link>

@@ -74,6 +74,7 @@ export default {
       // async, await
       try {
         await this.$http.post("/register", { login: this.login, password: this.password, email: this.email, name: this.name, surname: this.surname, gender: this.gender, role: this.role });
+        console.log(this.login);
         this.$router.push({ name: "login" });
       } catch (e) {
         this.error = "User with this email or this login already exists! Please try-it again";

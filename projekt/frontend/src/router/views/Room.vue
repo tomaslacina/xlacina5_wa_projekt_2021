@@ -1,8 +1,12 @@
 <template>
+  <div>
   <h4 v-if="room">Welcome! This is room {{ room.title }} with ID {{ room.id_rooms }}</h4>
+  </div>
 </template>
 
 <script>
+//import Chat from "./components/Chat";
+
 export default {
   data() {
     return {
