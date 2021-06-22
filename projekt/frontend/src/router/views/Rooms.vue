@@ -1,5 +1,14 @@
 <template>
   <div class="container">
+
+
+    <form @submit.prevent="createNewRoom"> 
+      <input type="text" placeholder="Type name of new room" onfocus="this.value=''" class="form-control" v-model="title"/>
+      <br>
+      <button type="submit" class="btn btn-success">Create new room</button>
+    </form>
+    <br>
+
     <h3>Room list:</h3>
     <div class="row">
       <div class="col" v-for="room in rooms" :key="room.id_rooms">
@@ -32,6 +41,18 @@ export default {
       } catch (e) {
         console.error("nastala chyba", e);
       }
+    },
+  
+
+    async createNewRoom(){
+      try{
+        const response = await this.$http.post("/auth/rooms", {title: this.title});
+        this.rooms=response.data;
+        this.loadAllRooms();
+      }catch(e){
+        console.error("nastala chyba", e);
+      }
+
     },
   },
   mounted() {

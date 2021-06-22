@@ -30,7 +30,7 @@ class RoomRepository {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function create(array $data, int $userId = 0): array {
+    public function create(array $data, int $userId): array {
         $stmt = $this->db->prepare("insert into rooms (title, created, id_users_owner) values (:title,:created,:id_users_owner)");
         $stmt->bindValue(':title', $data['title']);
         $stmt->bindValue(':created', time());

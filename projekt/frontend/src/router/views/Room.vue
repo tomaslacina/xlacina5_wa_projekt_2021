@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container md-5">
   <h4 v-if="room">Welcome! This is room {{ room.title }} with ID {{ room.id_rooms }}</h4>
   </div>
 </template>
