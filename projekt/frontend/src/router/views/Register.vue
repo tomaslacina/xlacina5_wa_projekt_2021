@@ -2,20 +2,24 @@
     <div class="container">
         <h3>Register</h3>
 
-            <form @submit.prevent="registration">
+         <div v-if="error" class="alert alert-danger">
+            {{ error }}
+          </div>
+
+            <form @submit.prevent="register">
                 <div>
                     <label class="form-label">Login</label>
-                    <input type="text" v-model="login" class="form-control" placeholder="your_login"/>
+                    <input type="text" v-model="login" class="form-control" placeholder="your_login" required/>
                 </div>
 
                 <div>
                     <label class="form-label">Password</label>
-                    <input type="password" v-model="password" class="form-control" />
+                    <input type="password" v-model="password" class="form-control" required />
                 </div>
 
                  <div>
                     <label class="form-label">E-mail</label>
-                    <input type="email" v-model="email" class="form-control" placeholder="example@yourmail.com"/>
+                    <input type="email" v-model="email" class="form-control" placeholder="example@yourmail.com" required/>
                 </div>               
 
                 <div>
@@ -29,14 +33,9 @@
                 </div>
 
                 <div>
-                    <label class="form-label">Gender: </label>
-                    <input type="radio" id="male" name="gender" value="male"> male
-                    
-                    <input type="radio" id="female" name="gender" value="female"> female
-                    
-                    <input type="radio" id="other" name="gender" value="other"> other
-                    
-                </div>
+                    <label class="form-label">Gender</label>
+                    <input type="text" v-model="gender" class="form-control" placeholder="Male, Female, Other">
+                 </div>
 
                 <div>
                     <label class="form-label">Role</label>
@@ -63,21 +62,26 @@ export default {
   data: () => {
     return {
       login: "",
+      email:"",
       password: "",
+      name:"",
+      surname:"",
+      gender:"",
+      role:"",
       error: null,
     };
   },
   methods: {
     async register() {
       this.error = null;
-
       // async, await
       try {
-        await this.$http.post("/register", { login: this.login, password: this.password, email: this.email, name: this.name, surname: this.surname, gender: this.gender, role: this.role });
-        console.log(this.login);
+        const response = await this.$http.post("/register", { login: this.login, password: this.password, email: this.email, name: this.name, surname: this.surname, gender: this.gender, role: this.role });
+        const{token}=response.data;
+        this.$tokenManager.setToken(token);
         this.$router.push({ name: "login" });
       } catch (e) {
-        this.error = "User with this email or this login already exists! Please try-it again";
+        this.error = "Email or login already exists in databases / login must be created with a-z,A-Z,1-9, spaces";
       }
     },
   },

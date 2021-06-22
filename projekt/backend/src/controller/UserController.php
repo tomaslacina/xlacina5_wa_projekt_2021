@@ -49,7 +49,7 @@ class UserController
 
         //overeni loginu a mailu od uzivatele - data:
 
-        if(!preg_match("/^[a-zA-Z-' ]*$/",$data['login'])){
+        if(!preg_match("/^[a-zA-Z-1-9' ]*$/",$data['login'])){
             return $response->withStatus(403, 'Login must be created with only letters');
         }
 

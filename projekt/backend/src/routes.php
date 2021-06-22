@@ -15,7 +15,7 @@ return function (App $app) {
 
     // Login and registration
     $app->post('/login', [UserController::class, 'login']);
-    $app->post('/registration', [UserController::class, 'register']);
+    $app->post('/register', [UserController::class, 'register']);
 
     // --- Secured routes ---
     $app->group('/auth', function(RouteCollectorProxy $group) {
