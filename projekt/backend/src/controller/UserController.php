@@ -28,7 +28,7 @@ class UserController
             return $response->withStatus(400, 'Bad input');
         } else if ($user = $this->repository->verifyLogin($login, $password)) {
             // after user is verified successfully, create the token and send it in response
-            $token = $this->repository->createToken($user['id_users']);
+            $token = $this->repository->createToken($user['id_users'], $user['login']);
             $responseData = [
                 'token' => $token
             ];
