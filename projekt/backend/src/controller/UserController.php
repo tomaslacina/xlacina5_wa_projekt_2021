@@ -47,15 +47,27 @@ class UserController
 
         // TODO validate inputs before creating the user
 
+        //overeni loginu a mailu od uzivatele - data:
+
+        if(!preg_match("/^[a-zA-Z-' ]*$/",$data['login'])){
+            return $response->withStatus(403, 'Login must be created with only letters');
+        }
+
+        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            return $response->withStatus(403, 'Wrong email format !');
+        }
+
+        //OVERENI JESTLI NENI EMAIL A LOGIN JIZ V DATABAZI:
         $emailOk = $this->repository->verifyUserEmail($data["email"]);
         $loginOk = $this->repository->verifyUserLogin($data["login"]);
 
         if ($emailOk["ver_email"] >= 1 or $loginOk["ver_login"] >= 1) {
             //echo $emailOk["ver_email"];
             //echo $loginOk["ver_login"];
-            return $response->withStatus(400, 'Email or login is not unique');
+            return $response->withStatus(403, 'Email or login is not unique');
         } else {
             $user = $this->repository->createUser($data);
+
             if ($user !== false) {
                 unset($user['password']); // do not send password to frontend!
                 $json = json_encode($user);

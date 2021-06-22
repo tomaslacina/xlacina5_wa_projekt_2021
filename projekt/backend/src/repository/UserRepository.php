@@ -85,11 +85,12 @@ class UserRepository {
         return false;
     }
 
-    public function createToken(int $userId): string
+    public function createToken(int $userId, string $login): string
     {
         $tokenKey = $_ENV['TOKEN_KEY'];
         $tokenPayload = [
             "userId" => $userId,
+            "login" => $login,
         ];
         return JWT::encode($tokenPayload, $tokenKey, "HS256");
     }
