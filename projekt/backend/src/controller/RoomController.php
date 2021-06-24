@@ -71,4 +71,19 @@ class RoomController {
         $this->repository->delete($id);
         return $response->withStatus(204);
     }
+
+    public function getMessages(ResponseInterface $response, int $id): ResponseInterface
+    {
+        $messages = $this->repository->getAllMessages($id);
+        $json = json_decode($messages);
+        $response->getBody()->write($json);
+        return $response;
+    }
+
+
+
+
+
+
+
 }

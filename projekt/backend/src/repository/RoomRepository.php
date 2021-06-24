@@ -57,4 +57,21 @@ class RoomRepository {
         $stmt->bindValue(':id_rooms', $id);
         $stmt->execute();
     }
+
+
+    public function getAllMessages(int $idRoom): array
+    {
+        $stmt = $this->db->prepare("SELECT  (name || ' ' || surname) as name, message, created FROM messages 
+            join users u on u.id_users = messages.id_users_from 
+            WHERE id_rooms=:id_rooms");
+        $stmt->bindValue(':id_rooms', $idRoom);
+        $stmt->execute();
+        $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $messages;
+    }
+
+
+
+
+
 }

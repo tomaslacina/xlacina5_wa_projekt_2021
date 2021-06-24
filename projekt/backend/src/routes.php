@@ -17,15 +17,22 @@ return function (App $app) {
     $app->post('/login', [UserController::class, 'login']);
     $app->post('/register', [UserController::class, 'register']);
 
+    $app->get('/rooms/getMessages/{id}',[RoomController::class, 'getMessages']);
+
     // --- Secured routes ---
     $app->group('/auth', function(RouteCollectorProxy $group) {
 
         // Rooms
         $group->get('/rooms', [RoomController::class, 'getAll']);
         $group->get('/rooms/{id}', [RoomController::class, 'getById']);
+
+
+
+
         $group->post('/rooms', [RoomController::class, 'create']);
         $group->put('/rooms/{id}', [RoomController::class, 'update']);
         $group->delete('/rooms/{id}', [RoomController::class, 'delete']);
+
 
     });
     // --- end of Secured routes ---
