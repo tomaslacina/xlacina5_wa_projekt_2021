@@ -71,6 +71,26 @@ class RoomRepository {
     }
 
 
+    public function sendMessage(int $roomId, int $userId, string $message): bool {
+
+        $stmt = $this->db->prepare("insert into messages (id_rooms, id_users_from, created, message)
+            values (:roomId, :userId, :created, :message)");
+        $stmt->bindValue(':message', $message);
+        $stmt->bindValue(':created', time());
+        $stmt->bindValue(':userId', $userId);
+        $stmt->bindValue(':roomId', $roomId);
+        $stmt->execute();
+        return true;
+
+    }
+
+
+
+
+
+
+
+
 
 
 

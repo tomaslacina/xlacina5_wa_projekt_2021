@@ -81,6 +81,29 @@ class RoomController {
     }
 
 
+    public function sendMessages(ServerRequestInterface $request, ResponseInterface $response , int $id): ResponseInterface
+    {
+        $message = json_decode($request->getBody(), true);
+        $room = $id;
+        $tokenPayload = $request->getAttribute('token');
+        $userId = (int) $tokenPayload['userId'];
+        if($message['message'] != '') {
+            if ($this->repository->sendMess($room, $userId, (string)$message['message'])) {
+                $mess = $this->repository->getAllMessages($room);
+                $json = json_encode($mess);
+                $response->getBody()->write($json);
+                return $response->withStatus(202, 'OK');
+            } else {
+                return $response->withStatus(404, 'Not found');
+            }
+        }
+        else
+        {
+            return $response->withStatus(409, 'Bad imput');
+        }
+    }
+
+
 
 
 
