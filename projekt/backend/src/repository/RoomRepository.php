@@ -51,7 +51,7 @@ class RoomRepository {
         return $this->getById($id);
     }
 
-    public function delete(int $id)
+    public function delete (int $id)
     {
         $stmt = $this->db->prepare("DELETE FROM rooms WHERE id_rooms=:id_rooms");
         $stmt->bindValue(':id_rooms', $id);
@@ -62,7 +62,7 @@ class RoomRepository {
     public function getAllMessages(int $idRoom): array
     {
         $stmt = $this->db->prepare("SELECT  (name || ' ' || surname) as name, message, created FROM messages 
-            join users u on u.id_users = messages.id_users_from 
+            join users  on users.id_users = messages.id_users_from 
             WHERE id_rooms=:id_rooms");
         $stmt->bindValue(':id_rooms', $idRoom);
         $stmt->execute();
@@ -130,6 +130,35 @@ class RoomRepository {
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $users;
     }
+
+
+
+    public function isOwner(int $roomId, int $userId) : bool
+    {
+        $stmt = $this->db->prepare("SELECT * FROM rooms WHERE id_rooms=:roomId AND id_users_owner=:userId");
+        $stmt->bindValue(':roomId', $roomId);
+        $stmt->bindValue(':userId', $userId);
+        $stmt->execute();
+        $owner = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($owner!=null){
+            return true;
+        }
+        else{
+            return false;
+        }
+
+    }
+
+    public function leaveRoom(int $roomId, int $userId) : bool
+    {
+        $stmt = $this->db->prepare("DELETE FROM in_room WHERE id_users=:userId AND id_rooms=:roomId");
+        $stmt->bindValue(':roomId', $roomId);
+        $stmt->bindValue(':userId', $userId);
+        $stmt->execute();
+        return true;
+    }
+
+
 
 
 

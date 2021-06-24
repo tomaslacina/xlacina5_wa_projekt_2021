@@ -27,8 +27,11 @@ return function (App $app) {
         $group->get('/rooms/{id}', [RoomController::class, 'getById']);
         $group->get('/rooms/getMessages/{id}',[RoomController::class, 'getMessages']);
 
-        $group->post('/rooms/sendMessage/{id}', [RoomController::class, 'sendMessages']);
+        $group->post('/rooms/sendMessage/{id}', [RoomController::class, 'sendMessage']);
         $group->post('/rooms/enterRooms/{id}', [RoomController::class, 'enterToRoom']);
+        $group->post('/rooms/isUserOwner/{id}', [RoomController::class, 'isOwner']);
+
+        $group->delete('/rooms/leaveRoom/{id}', [RoomController::class, 'leaveRoom']);
 
 
 

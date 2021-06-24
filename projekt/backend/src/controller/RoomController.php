@@ -81,7 +81,7 @@ class RoomController {
     }
 
 
-    public function sendMessages(ServerRequestInterface $request, ResponseInterface $response , int $id): ResponseInterface
+    public function sendMessage(ServerRequestInterface $request, ResponseInterface $response , int $id): ResponseInterface
     {
         $message = json_decode($request->getBody(), true);
         $room = $id;
@@ -89,8 +89,8 @@ class RoomController {
         $userId = (int) $tokenPayload['userId'];
         if($message['message'] != '') {
             if ($this->repository->sendMessage($room, $userId, (string)$message['message'])) {
-                $mess = $this->repository->getAllMessages($room);
-                $json = json_encode($mess);
+                $message = $this->repository->getAllMessages($room);
+                $json = json_encode($message);
                 $response->getBody()->write($json);
                 return $response->withStatus(202, 'Message was send');
             } else {
@@ -142,6 +142,42 @@ class RoomController {
             return $response->withStatus(404, 'ERROR');
         }
     }
+
+
+    public function isOwner(ServerRequestInterface $request, ResponseInterface $response, int $id): ResponseInterface
+    {
+        $tokenPayload = $request->getAttribute('token');
+        $userId = (int) $tokenPayload['userId'];
+
+        if($owner=$this->repository->isOwner($id,$userId)) {
+            $json = json_encode($owner);
+            $response->getBody()->write($json);
+            return $response->withStatus(200, 'Logged user is owner this room');
+        }
+        else {
+            $json = json_encode($owner);
+            $response->getBody()->write($json);
+            return $response->withStatus(200, 'You are not owner this room');
+        }
+    }
+
+    public function leaveRoom(ServerRequestInterface $request, ResponseInterface $response, int $id): ResponseInterface
+    {
+        $tokenPayload = $request->getAttribute('token');
+        $userId = (int) $tokenPayload['userId'];
+
+        if($this->repository->leaveRoom($id,$userId)){
+            return $response->withStatus(200, 'OK');
+        }
+        else{
+            return $response->withStatus(409, 'Not OK');
+        }
+
+    }
+
+
+
+
 
 
 
