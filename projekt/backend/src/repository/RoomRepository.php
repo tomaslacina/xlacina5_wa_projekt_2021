@@ -85,6 +85,45 @@ class RoomRepository {
     }
 
 
+    public function enterRoom(int $roomId, int $userId): bool {
+        if(!$this->getData($roomId,$userId)){
+            return false;
+        }
+        else {
+            $stmt = $this->db->prepare("insert into in_room (id_users, id_rooms, last_message, entered) 
+            values (:userId, :roomId, :lastMessage, :entered)");
+
+            $stmt->bindValue(':userId', $userId);
+            $stmt->bindValue(':roomId', $roomId);
+            $stmt->bindValue(':lastMessage', time());
+            $stmt->bindValue(':entered', time());
+
+            $stmt->execute();
+            return true;
+        }
+    }
+
+
+    public function getData(int $roomId, int $userId): bool
+    {
+        $stmt = $this->db->prepare("SELECT * FROM in_room 
+                        WHERE id_users = :id_users 
+                        AND id_rooms = :id_rooms");
+        $stmt->bindValue(':id_users', $userId);
+        $stmt->bindValue(':id_rooms', $roomId);
+        $stmt->execute();
+        $rooms = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($rooms!=null){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+
+
+
+
 
 
 

@@ -17,7 +17,7 @@ return function (App $app) {
     $app->post('/login', [UserController::class, 'login']);
     $app->post('/register', [UserController::class, 'register']);
 
-    $app->get('/rooms/getMessages/{id}',[RoomController::class, 'getMessages']);
+
 
     // --- Secured routes ---
     $app->group('/auth', function(RouteCollectorProxy $group) {
@@ -25,6 +25,11 @@ return function (App $app) {
         // Rooms
         $group->get('/rooms', [RoomController::class, 'getAll']);
         $group->get('/rooms/{id}', [RoomController::class, 'getById']);
+        $group->get('/rooms/getMessages/{id}',[RoomController::class, 'getMessages']);
+
+
+        $group->post('/rooms/sendMessages/{id}', [RoomController::class, 'sendMessages']);
+        $group->post('/rooms/enterRooms/{id}', [RoomController::class, 'enterRooms']);
 
 
 

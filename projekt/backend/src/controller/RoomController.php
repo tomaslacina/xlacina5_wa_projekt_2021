@@ -75,7 +75,7 @@ class RoomController {
     public function getMessages(ResponseInterface $response, int $id): ResponseInterface
     {
         $messages = $this->repository->getAllMessages($id);
-        $json = json_decode($messages);
+        $json = json_encode($messages);
         $response->getBody()->write($json);
         return $response;
     }
@@ -88,20 +88,53 @@ class RoomController {
         $tokenPayload = $request->getAttribute('token');
         $userId = (int) $tokenPayload['userId'];
         if($message['message'] != '') {
-            if ($this->repository->sendMess($room, $userId, (string)$message['message'])) {
+            if ($this->repository->sendMessage($room, $userId, (string)$message['message'])) {
                 $mess = $this->repository->getAllMessages($room);
                 $json = json_encode($mess);
                 $response->getBody()->write($json);
-                return $response->withStatus(202, 'OK');
+                return $response->withStatus(202, 'Message was send');
             } else {
-                return $response->withStatus(404, 'Not found');
+                return $response->withStatus(404, '404 - problem with send message to chat ');
             }
         }
         else
         {
-            return $response->withStatus(409, 'Bad imput');
+            return $response->withStatus(409, 'Wrong input data');
         }
     }
+
+
+    public function enterRooms(ServerRequestInterface $request, ResponseInterface $response, int $id): ResponseInterface
+    {
+        $room = $id;
+        $tokenPayload = $request->getAttribute('token');
+        $userId = (int) $tokenPayload['userId'];
+
+        if($room != null and $userId != null)
+        {
+            if($this->repository->enterRoom((int)$room, $userId)){
+                $users = $this->repository->getUsers($room);
+                $json = json_encode($users);
+                $response->getBody()->write($json);
+                return $response->withStatus(202, 'OK');
+            }
+            else{
+                $users = $this->repository->getUsers($room);
+                $json = json_encode($users);
+                $response->getBody()->write($json);
+                return $response->withStatus(202, 'Allready in');
+            }
+        }
+        else
+        {
+            $response->getBody()->write('Nenaslo');
+            return $response->withStatus(404, 'Not found');
+        }
+    }
+
+
+
+
 
 
 
