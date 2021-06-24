@@ -8,14 +8,17 @@
 
   <div>
   <table class="table table-dark">
+    
      <thead>
-      <tr>
-        <th>Actually in room:</th>
+      <tr> 
+        <th>Actually in room: name and surname</th>
+        <th>login</th>
       </tr>
     </thead>
     <tbody class="tbody-warning">
       <tr v-for="user in users" :key="user.id_users">
-        <td>{{user['name']}}</td>
+        <td>{{user['name']}} {{user['surname']}}</td>
+        <td>{{user['login']}}</td>
       </tr>
     </tbody>
   </table>
@@ -43,7 +46,7 @@
   <table class="table table-dark">
     <thead>
       <tr>
-        <th>Name and Surname</th>
+        <th>Senders name and surname</th>
         <th>message</th>
       </tr>
     </thead>
@@ -93,6 +96,19 @@ export default {
         const response = await this.$http.get(`/auth/rooms/${roomId}`);
         this.room = response.data;
       } catch (e) {
+        this.$router.push({ name: "notFound" });
+      }
+    },
+
+    async getUsersInRoom(roomId){
+      try {
+        roomId = this.$route.params.id;
+        const response = await this.$http.get(`/auth/rooms/getUsers/${roomId}`);
+        this.users = response.data;
+        
+        //console.log(this.users);
+      } catch (e) {
+        
         this.$router.push({ name: "notFound" });
       }
     },

@@ -122,8 +122,8 @@ class RoomRepository {
 
     public function getUsers(int $idRoom): array
     {
-        $stmt = $this->db->prepare("SELECT u.id_users, u.name || ' ' || u.surname as name FROM in_room
-        join users u on u.id_users = in_room.id_users
+        $stmt = $this->db->prepare("SELECT users.id_users, users.name, users.surname, users.login  FROM in_room
+        join users  on users.id_users = in_room.id_users
         where id_rooms=:id_rooms");
         $stmt->bindValue(':id_rooms', $idRoom);
         $stmt->execute();

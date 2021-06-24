@@ -127,7 +127,7 @@ class RoomController {
                 $users = $this->repository->getUsers($room);
                 $json = json_encode($users);
                 $response->getBody()->write($json);
-                return $response->withStatus(202, 'User enter to room');
+                return $response->withStatus(202, 'User entered to room');
             }
             else{
                 $users = $this->repository->getUsers($room);
@@ -167,10 +167,10 @@ class RoomController {
         $userId = (int) $tokenPayload['userId'];
 
         if($this->repository->leaveRoom($id,$userId)){
-            return $response->withStatus(200, 'OK');
+            return $response->withStatus(200, 'User leave this room successfully');
         }
         else{
-            return $response->withStatus(409, 'Not OK');
+            return $response->withStatus(409, 'Something went wrong :/ ');
         }
 
     }
