@@ -27,7 +27,7 @@ return function (App $app) {
         $group->get('/rooms/{id}', [RoomController::class, 'getById']);
         $group->get('/rooms/getMessages/{id}',[RoomController::class, 'getMessages']);
 
-        $group->post('/rooms/sendMessages/{id}', [RoomController::class, 'sendMessages']);
+        $group->post('/rooms/sendMessage/{id}', [RoomController::class, 'sendMessages']);
         $group->post('/rooms/enterRooms/{id}', [RoomController::class, 'enterToRoom']);
 
 
