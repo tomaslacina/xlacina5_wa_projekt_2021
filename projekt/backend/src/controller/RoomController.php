@@ -104,31 +104,42 @@ class RoomController {
     }
 
 
-    public function enterRooms(ServerRequestInterface $request, ResponseInterface $response, int $id): ResponseInterface
+    public function getUsers(ResponseInterface $response, int $id): ResponseInterface
     {
-        $room = $id;
+        $users = $this->repository->getUsers($id);
+        $json = json_encode($users);
+        $response->getBody()->write($json);
+        return $response;
+    }
+
+
+    public function enterToRoom(ServerRequestInterface $request, ResponseInterface $response, int $id): ResponseInterface
+    {
+
         $tokenPayload = $request->getAttribute('token');
         $userId = (int) $tokenPayload['userId'];
 
-        if($room != null and $userId != null)
+        $room = $id;
+
+        if( $userId != null and $room != null)
         {
-            if($this->repository->enterRoom((int)$room, $userId)){
+            if($this->repository->enterToRoom((int)$room, $userId)){
                 $users = $this->repository->getUsers($room);
                 $json = json_encode($users);
                 $response->getBody()->write($json);
-                return $response->withStatus(202, 'OK');
+                return $response->withStatus(202, 'User enter to room');
             }
             else{
                 $users = $this->repository->getUsers($room);
                 $json = json_encode($users);
                 $response->getBody()->write($json);
-                return $response->withStatus(202, 'Allready in');
+                return $response->withStatus(202, 'User is allready in this room');
             }
         }
         else
         {
-            $response->getBody()->write('Nenaslo');
-            return $response->withStatus(404, 'Not found');
+            $response->getBody()->write('Something went wrong :/ ');
+            return $response->withStatus(404, 'ERROR');
         }
     }
 

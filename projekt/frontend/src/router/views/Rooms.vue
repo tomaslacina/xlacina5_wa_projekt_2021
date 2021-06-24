@@ -3,7 +3,7 @@
 
 
     <form @submit.prevent="createNewRoom"> 
-      <input type="text" placeholder="Type name of new room" onfocus="this.value=''" class="form-control" v-model="title"/>
+      <input type="text" placeholder="Type name of new room" onfocus="this.value=''" class="form-control" v-model="title" required/>
       <br>
       <button type="submit" class="btn btn-success">Create new room</button>
     </form>

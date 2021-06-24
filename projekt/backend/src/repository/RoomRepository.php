@@ -85,7 +85,7 @@ class RoomRepository {
     }
 
 
-    public function enterRoom(int $roomId, int $userId): bool {
+    public function enterToRoom(int $roomId, int $userId): bool {
         if(!$this->getData($roomId,$userId)){
             return false;
         }
@@ -120,15 +120,16 @@ class RoomRepository {
         }
     }
 
-
-
-
-
-
-
-
-
-
+    public function getUsers(int $idRoom): array
+    {
+        $stmt = $this->db->prepare("SELECT u.id_users, u.name || ' ' || u.surname as name FROM in_room
+        join users u on u.id_users = in_room.id_users
+        where id_rooms=:id_rooms");
+        $stmt->bindValue(':id_rooms', $idRoom);
+        $stmt->execute();
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $users;
+    }
 
 
 

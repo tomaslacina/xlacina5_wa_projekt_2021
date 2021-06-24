@@ -28,7 +28,7 @@
 
   <form @submit.prevent="sendMessage">
     <label class="form-label">Message:</label>
-    <input type="text" placeholder="Type your message here" onfocus="this.value=''" class="form-control" v-model="message"/>
+    <input type="text" placeholder="Type your message here" onfocus="this.value=''" class="form-control" v-model="message" required/>
     <button type="submit" class="btn btn-success">Send message</button>
   </form>
 
@@ -82,12 +82,24 @@ export default {
         this.$router.push({name: "notFound"});
       }
 
+    },
+
+    async enterRoom(roomId){
+      try{
+        roomId = this.$route.params.id;
+        const response = await this.$http.post(`/auth/rooms/enterRooms/${roomId}`);
+        this.users=response.data;
+      }catch (e){
+        console.log(e)
+
+      }
     }
 
   },
   mounted() {
     this.fetchRoomDetail(this.$route.params.id);
-    this.getMessages(this.$route.params.id)
+    this.getMessages(this.$route.params.id);
+    this.enterRoom(this.$route.params.id);
   },
 };
 </script>
