@@ -9,12 +9,12 @@
 
       <div v-if="user != null">
         
-        <div>
-        
+        <div> 
         <router-link :to="{ name: 'rooms' }" class="navbar-brand"><button class="btn btn-primary">ROOMS</button></router-link>
         <button @click="logout" class="btn btn-danger" >LOGOUT</button>
         </div>
 
+      
        
       </div>
       <ul v-else class="navbar-nav">

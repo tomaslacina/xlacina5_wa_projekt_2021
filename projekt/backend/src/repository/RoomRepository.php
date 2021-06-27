@@ -92,7 +92,6 @@ class RoomRepository {
         else {
             $stmt = $this->db->prepare("insert into in_room (id_users, id_rooms, last_message, entered) 
             values (:userId, :roomId, :lastMessage, :entered)");
-
             $stmt->bindValue(':userId', $userId);
             $stmt->bindValue(':roomId', $roomId);
             $stmt->bindValue(':lastMessage', time());

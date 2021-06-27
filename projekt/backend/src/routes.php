@@ -22,23 +22,28 @@ return function (App $app) {
     // --- Secured routes ---
     $app->group('/auth', function(RouteCollectorProxy $group) {
 
-        // Rooms
+        // All Rooms
         $group->get('/rooms', [RoomController::class, 'getAll']);
+        //Get 1 room by Id
         $group->get('/rooms/{id}', [RoomController::class, 'getById']);
+        //Get all messages in room
         $group->get('/rooms/getMessages/{id}',[RoomController::class, 'getMessages']);
+        //Get all users in room
         $group->get('/rooms/getUsers/{id}',[RoomController::class, 'getUsers']);
-
+        //Send message in room
         $group->post('/rooms/sendMessage/{id}', [RoomController::class, 'sendMessage']);
+        //Enter to this room
         $group->post('/rooms/enterRooms/{id}', [RoomController::class, 'enterToRoom']);
+        //get information about if user is owner or not
         $group->post('/rooms/isUserOwner/{id}', [RoomController::class, 'isOwner']);
-
+        //leave this room (delete logged-in user from this room)
         $group->delete('/rooms/leaveRoom/{id}', [RoomController::class, 'leaveRoom']);
 
-
-
-
+        //Create new room
         $group->post('/rooms', [RoomController::class, 'create']);
+        //update - ze cvika
         $group->put('/rooms/{id}', [RoomController::class, 'update']);
+        //delete this room (if user is owner)
         $group->delete('/rooms/{id}', [RoomController::class, 'delete']);
 
 

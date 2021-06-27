@@ -10,7 +10,7 @@ class HomeController
 
     public function index(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
-        $response->getBody()->write("Backend home.");
+        $response->getBody()->write("Home page (backend)");
         return $response;
     }
 
